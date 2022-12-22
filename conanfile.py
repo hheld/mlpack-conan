@@ -6,7 +6,7 @@ class MlpackConan(ConanFile):
     version = "4.0.0"
     license = "BSD-3-Clause"
     author = "Harald Held <harald.held@gmail.com>"
-    url = "<Package recipe repository url here, for issues about the package>"
+    url = "https://github.com/hheld/mlpack-conan"
     description = "mlpack is an intuitive, fast, and flexible header-only C++ machine learning library with bindings to other languages."
     topics = ("machine learning")
     settings = "os", "compiler", "build_type", "arch"
