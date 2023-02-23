@@ -12,7 +12,7 @@ class MlpackConan(ConanFile):
     topics = ("machine learning")
     settings = "os", "compiler", "build_type", "arch"
 
-    requires = ["armadillo/10.7.3", "ensmallen/2.19.0", "cereal/1.3.2"]
+    requires = ["armadillo/11.4.3", "ensmallen/2.19.0", "cereal/1.3.2"]
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True, "armadillo:use_hdf5": False}
 
@@ -24,16 +24,16 @@ class MlpackConan(ConanFile):
         self.run(f"git clone -b {self.version} https://github.com/mlpack/mlpack.git")
 
     def generate(self):
-       tc = CMakeToolchain(self)
-       tc.preprocessor_definitions["ARMADILLO_INCLUDE_DIR"] = self.dependencies["armadillo"].cpp_info.includedirs
-       tc.preprocessor_definitions["ARMADILLO_LIBRARY"] = self.dependencies["armadillo"].cpp_info.libs
-       tc.preprocessor_definitions["ENSMALLEN_INCLUDE_DIR"] = self.dependencies["ensmallen"].cpp_info.includedirs
-       tc.preprocessor_definitions["CEREAL_INCLUDE_DIR"] = self.dependencies["cereal"].cpp_info.includedirs
-       tc.preprocessor_definitions["BUILD_CLI_EXECUTABLES"] = "OFF"
-       tc.generate()
+        tc = CMakeToolchain(self, generator="Ninja")
+        tc.cache_variables["ARMADILLO_INCLUDE_DIR"] = self.dependencies["armadillo"].cpp_info.includedirs[0]
+        tc.cache_variables["ARMADILLO_LIBRARY"] = self.dependencies["armadillo"].cpp_info.libs
+        tc.cache_variables["ENSMALLEN_INCLUDE_DIR"] = self.dependencies["ensmallen"].cpp_info.includedirs[0]
+        tc.cache_variables["CEREAL_INCLUDE_DIR"] = self.dependencies["cereal"].cpp_info.includedirs[0]
+        tc.cache_variables["BUILD_CLI_EXECUTABLES"] = "OFF"
+        tc.generate()
 
-       deps = CMakeDeps(self)
-       deps.generate()
+        deps = CMakeDeps(self)
+        deps.generate()
 
     def build(self):
         cmake = CMake(self)
